@@ -1,2 +1,2 @@
-# generative-ai-service
-How to Build a Generative AI Service
+# How to Build a Generative AI Service
+
