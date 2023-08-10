@@ -1,0 +1,24 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "API",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/.debug/index.ts",
+      "env": {
+        "REGION": "eu-north-1"
+      },
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+      "args": [
+        "${workspaceFolder}/src/api/index.ts",
+        "${workspaceFolder}/src/api/__fixtures__/get-status.json"
+      ]
+    }
+  ]
+}
