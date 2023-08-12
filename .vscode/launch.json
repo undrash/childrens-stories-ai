@@ -7,9 +7,9 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "API",
+      "name": "API: Get Status",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/.debug/index.ts",
+      "program": "${workspaceFolder}/.debug/run-lambda.ts",
       "env": {
         "REGION": "eu-north-1"
       },
