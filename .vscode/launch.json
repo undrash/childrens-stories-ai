@@ -11,13 +11,31 @@
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/.debug/run-lambda.ts",
       "env": {
-        "REGION": "eu-north-1"
+        "REGION": "eu-north-1",
+        "IMAGE_TABLE_NAME": "generative-ai-service-images"
       },
       "runtimeExecutable": "node",
       "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
       "args": [
         "${workspaceFolder}/src/api/index.ts",
         "${workspaceFolder}/src/api/__fixtures__/get-status.json"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "API: Create Image",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/.debug/run-lambda.ts",
+      "env": {
+        "REGION": "eu-north-1",
+        "IMAGE_TABLE_NAME": "generative-ai-service-images"
+      },
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+      "args": [
+        "${workspaceFolder}/src/api/index.ts",
+        "${workspaceFolder}/src/api/__fixtures__/create-image.json"
       ]
     }
   ]

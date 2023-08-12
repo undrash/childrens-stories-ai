@@ -2,11 +2,18 @@
   "name": "generative-ai-service-pulumi",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.388.0",
+    "@aws-sdk/lib-dynamodb": "^3.388.0",
+    "@pulumi/aws": "^5.42.0",
+    "@pulumi/awsx": "^1.0.4",
+    "@pulumi/pulumi": "^3.78.1"
+  }
 }

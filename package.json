@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "./build.sh",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint . --max-warnings=0",
+    "deploy": "npm run lint; npm run build; npm test; pulumi up -C pulumi/ --stack generative-ai-service --yes"
   },
   "keywords": [],
   "author": "",
