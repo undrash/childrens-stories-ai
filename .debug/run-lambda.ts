@@ -2,8 +2,6 @@ import { readFile } from 'node:fs/promises';
 import * as path from 'node:path';
 
 const run = async () => {
-  console.log(process.argv);
-
   const [, , handlerPath, payloadPath] = process.argv;
 
   const resolvedPath = path.resolve(handlerPath);
