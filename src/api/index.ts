@@ -3,8 +3,7 @@ import { APIGatewayEvent, Context, Handler } from 'aws-lambda';
 import { Request, Response } from 'lambda-api';
 import createAPI from 'lambda-api';
 
-import { DynamoTable } from '../_lib/dynamo';
-import { getEnvValue } from '../_lib/utils';
+import { DynamoTable, getEnvValue, ImageStatus } from '../_lib';
 
 const Images = new DynamoTable({
   name: 'ImageTable',
@@ -26,7 +25,7 @@ api.post('/images', async (req: Request, res: Response) => {
   const image = await Images.put({
     id: randomUUID(),
     prompt,
-    status: 'pending',
+    status: ImageStatus.PENDING,
   });
 
   res.status(201).json(image);
