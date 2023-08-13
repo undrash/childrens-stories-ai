@@ -7,6 +7,7 @@
     "build": "./build.sh",
     "test": "jest",
     "lint": "eslint . --max-warnings=0",
+    "init:comfy": "./init_comfy.sh",
     "deploy": "npm run lint; npm run build; npm test; pulumi up -C pulumi/ --stack generative-ai-service --yes"
   },
   "keywords": [],

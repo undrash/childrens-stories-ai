@@ -1,5 +1,6 @@
 node_modules/
 dist/
+comfy-ui/src
 
 .env
 .env.*
