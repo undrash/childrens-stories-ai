@@ -1,6 +1,6 @@
 node_modules/
 dist/
-comfy-ui/src
+comfy-ui-headless/src
 
 .env
 .env.*

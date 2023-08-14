@@ -4,7 +4,7 @@
 script_path="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 || exit ; pwd -P )"
 
 # Define the subdirectory relative to the script path
-subdir_path="$script_path/comfy-ui/src"
+subdir_path="$script_path/comfy-ui-headless/src"
 
 # Define the GitHub Project URL
 comfy_url="https://github.com/comfyanonymous/ComfyUI"
