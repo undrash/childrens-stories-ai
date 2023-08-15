@@ -21,7 +21,7 @@ RUN apt-get update && \
 
 ENV ROOT=/stable-diffusion
 
-COPY src/* ${ROOT}
+COPY src/ ${ROOT}
 COPY comfy-api ${ROOT}/comfy-api
 COPY supervisor ${ROOT}/supervisor
 
@@ -44,6 +44,12 @@ WORKDIR ${ROOT}/comfy-api
 RUN npm ci
 
 WORKDIR ${ROOT}
+
+RUN ls
+
+RUN ls comfy
+
+RUN ls comfy/ldm
 
 COPY docker /docker/
 

@@ -1,5 +1,6 @@
 node_modules/
 dist/
+comfy-ui-headless/
 
 .env
 .env.*
