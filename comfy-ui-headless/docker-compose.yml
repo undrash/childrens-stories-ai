@@ -13,3 +13,26 @@ services:
       - '${TMPDIR:-/tmp/localstack}:/tmp/localstack'
       - '/var/run/docker.sock:/var/run/docker.sock'
       - ./localstack_bootstrap:/etc/localstack/init/ready.d
+
+  comfy-ui-headless:
+    image: comfy-ui-headless:latest
+    depends_on:
+      - localstack
+    environment:
+      - NODE_ENV=dev
+      - AWS_ACCESS_KEY_ID=dummyaccesskey
+      - AWS_SECRET_ACCESS_KEY=dummysecretkey
+      - AWS_DEFAULT_REGION=eu-north-1
+      - REGION=eu-north-1
+      - AWS_ENDPOINT_URL=http://localstack:4566
+      - AWS_SSL_ENABLED=false
+      - SQS_QUEUE_URL=http://localstack:4566/000000000000/inference
+      - S3_BUCKET_NAME=inference
+      - SNS_TOPIC_ARN=arn:aws:sns:eu-north-1:000000000000:inference.fifo
+    ports:
+      - 8188:8188
+    volumes:
+      - ./src/data:/data
+      - ./src/output:/output
+      - ./src/models:/models
+    stop_signal: SIGINT

@@ -9,7 +9,8 @@ const { SNSClient, PublishCommand } = require('@aws-sdk/client-sns');
 const { ComfyApi, COMFY_ADDRESS } = require('./ComfyApi');
 
 const REGION = process.env.REGION || 'eu-north-1';
-const AWS_ENDPOINT = process.env.AWS_ENDPOINT || 'http://localhost:4566'; // For local development
+const AWS_ENDPOINT_URL =
+  process.env.AWS_ENDPOINT_URL || 'http://localhost:4566'; // For local development
 const SQS_QUEUE_URL =
   process.env.SQS_QUEUE_URL || 'http://localhost:4566/000000000000/inference';
 const S3_BUCKET_NAME = process.env.S3_BUCKET_NAME || 'inference';
@@ -17,21 +18,28 @@ const SNS_TOPIC_ARN =
   process.env.SNS_TOPIC_ARN ||
   'arn:aws:sns:eu-north-1:000000000000:inference.fifo';
 
-const NODE_ENV = process.env.NODE_ENV || 'dev';
+const isDevEnv = process.env.NODE_ENV === 'dev';
 
 const sqs = new SQSClient({
   region: REGION,
-  ...(NODE_ENV === 'dev' && { endpoint: AWS_ENDPOINT }),
+  ...(isDevEnv && {
+    endpoint: AWS_ENDPOINT_URL,
+  }),
 });
 
 const s3 = new S3Client({
   region: REGION,
-  ...(NODE_ENV === 'dev' && { endpoint: AWS_ENDPOINT, forcePathStyle: true }),
+  ...(isDevEnv && {
+    endpoint: AWS_ENDPOINT_URL,
+    forcePathStyle: true,
+  }),
 });
 
 const sns = new SNSClient({
   region: REGION,
-  ...(NODE_ENV === 'dev' && { endpoint: AWS_ENDPOINT }),
+  ...(isDevEnv && {
+    endpoint: AWS_ENDPOINT_URL,
+  }),
 });
 
 const WAIT_TIME_SECONDS = Number(process.env.WAIT_TIME_SECONDS) || 20;
