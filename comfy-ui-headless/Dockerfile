@@ -45,16 +45,9 @@ RUN npm ci
 
 WORKDIR ${ROOT}
 
-RUN ls
-
-RUN ls comfy
-
-RUN ls comfy/ldm
-
 COPY docker /docker/
 
 RUN chmod +x /docker/entrypoint.sh
-
 
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility NVIDIA_VISIBLE_DEVICES=all
 ENV PYTHONPATH="${PYTHONPATH}:${PWD}" CLI_ARGS=""
