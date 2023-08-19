@@ -45,12 +45,8 @@ RUN npm ci
 
 WORKDIR ${ROOT}
 
-COPY docker /docker/
-
-RUN chmod +x /docker/entrypoint.sh
-
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility NVIDIA_VISIBLE_DEVICES=all
 ENV PYTHONPATH="${PYTHONPATH}:${PWD}" CLI_ARGS=""
 EXPOSE 8188
-ENTRYPOINT ["/docker/entrypoint.sh"]
+
 CMD ["/usr/bin/supervisord"]

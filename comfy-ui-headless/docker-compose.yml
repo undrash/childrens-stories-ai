@@ -31,8 +31,4 @@ services:
       - SNS_TOPIC_ARN=arn:aws:sns:eu-north-1:000000000000:inference.fifo
     ports:
       - 8188:8188
-    volumes:
-      - ./src/data:/data
-      - ./src/output:/output
-      - ./src/models:/models
     stop_signal: SIGINT
