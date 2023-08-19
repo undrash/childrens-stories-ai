@@ -2,7 +2,8 @@ import * as pulumi from '@pulumi/pulumi';
 import * as aws from '@pulumi/aws';
 
 // Export project-specific configs from here
-export const config = new pulumi.Config('childrens-books');
+export const childrensBooksConfig = new pulumi.Config('childrens-books');
+export const comfyConfig = new pulumi.Config('comfy-ui-headless');
 
 export const stackName = pulumi.getStack();
 

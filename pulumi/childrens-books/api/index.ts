@@ -8,7 +8,22 @@ import {
   logRetentionInDays,
   stackName,
   provider,
-} from '../config';
+  queueVisibilityTimeoutInSeconds,
+} from '../../config';
+
+export const comfyQueue = new aws.sqs.Queue(
+  'comfy-queue',
+  {
+    name: `${stackName}-comfy.fifo`,
+    visibilityTimeoutSeconds: queueVisibilityTimeoutInSeconds,
+    maxMessageSize: 262144,
+    receiveWaitTimeSeconds: 20,
+    sqsManagedSseEnabled: true,
+    fifoQueue: true,
+    contentBasedDeduplication: true,
+  },
+  { provider },
+);
 
 export const imageTable = new aws.dynamodb.Table(
   'image-table',
@@ -48,7 +63,7 @@ const dynamoCrudPolicy = new aws.iam.Policy(
               'dynamodb:UpdateItem',
             ],
             Effect: 'Allow',
-            Resource: [imageTableArn],
+            Resource: [`${imageTableArn}*`],
           },
         ],
       }),
@@ -94,7 +109,7 @@ const apiLambda = new aws.lambda.Function(
   {
     name: `${stackName}-api-lambda`,
     description: "Children's Books API Lambda",
-    code: new pulumi.asset.FileArchive('../dist/api'),
+    code: new pulumi.asset.FileArchive('../../dist/api'),
     runtime: aws.lambda.Runtime.NodeJS18dX,
     role: apiLambdaRole.arn,
     handler: 'index.handler',

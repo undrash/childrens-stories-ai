@@ -1,0 +1,4 @@
+encryptionsalt: v1:kTbMdiHsSVg=:v1:C5C/9k25zDf23tYM:y+vlTcuJqBe+1Y7Qok5z/kf/MqaO9A==
+config:
+  aws:region: eu-north-1
+  comfy-ui-headless:environment: dev

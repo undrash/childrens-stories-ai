@@ -14,7 +14,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-auto-scaling": "^3.395.0",
+    "@aws-sdk/client-cloudwatch": "^3.395.0",
     "@aws-sdk/client-dynamodb": "^3.388.0",
+    "@aws-sdk/client-ecs": "^3.395.0",
     "@aws-sdk/client-sqs": "^3.388.0",
     "@aws-sdk/lib-dynamodb": "^3.388.0",
     "lambda-api": "^1.0.3"
