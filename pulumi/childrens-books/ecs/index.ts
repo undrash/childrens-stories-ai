@@ -6,6 +6,7 @@ import {
   stackName,
   awsCurrentAccountId,
   provider,
+  logRetentionInDays,
 } from '../../config';
 import { comfyQueue } from '../api';
 
@@ -418,7 +419,7 @@ const ecsLogGroup = new aws.cloudwatch.LogGroup(
   'ecs-log-group',
   {
     name: `${stackName}-ecs-log-group`,
-    retentionInDays: 14,
+    retentionInDays: logRetentionInDays,
   },
   { provider },
 );
