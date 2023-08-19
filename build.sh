@@ -1,30 +1,38 @@
 #!/bin/bash
 set -eu
-shopt -s extglob # extended globbing
+shopt -s extglob globstar # extended globbing
 
-NODE_VERSION="node18"
-PROJECT_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/" && pwd)
-DIST_ROOT="$PROJECT_ROOT/dist"
-ENTRYPOINTS_DIR="$PROJECT_ROOT/src/!(common)"
+node_version="node18"
+project_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/" && pwd)
+dist_root="$project_root/dist"
+entrypoints_dir="$project_root/src"
 
-for FULL_PATH in $ENTRYPOINTS_DIR/index.ts
+for full_path in $entrypoints_dir/**/index.ts
 do
-  # Use basename function to remove /index.ts and get the directory name
-  DIR_NAME=$(basename "$(dirname $FULL_PATH)")
+  # Remove the entrypoint dir to get relative paths.
+  relative_path="${full_path#$entrypoints_dir}"
+
+  # Find out the designated output folder by replacing /index.ts
+  out_dir="${relative_path/\/index.ts}"
+
+  # Check if out_dir contains "_common"
+  if [[ $out_dir == *"_lib"* ]]; then
+    continue
+  fi
 
   # Define our out folder
-  DIST_OUT="$DIST_ROOT/$DIR_NAME"
+  dist_out="$dist_root/$out_dir"
 
   # Make sure the output directory exists
-  mkdir -p $DIST_OUT
+  mkdir -p "$dist_out"
 
-  echo "Building $FULL_PATH to $DIST_OUT"
+  echo "Building $full_path to $dist_out"
 
   npx esbuild \
     --bundle \
-    --platform=node --target="$NODE_VERSION" \
+    --platform=node --target="$node_version" \
     --external:@aws-sdk \
     --minify \
-    --outdir="$DIST_OUT" \
-    "$FULL_PATH"
+    --outdir="$dist_out" \
+    "$full_path"
 done
