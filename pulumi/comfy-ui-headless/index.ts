@@ -37,7 +37,7 @@ const comfyImageUri = new aws.ssm.Parameter(
     type: 'String',
     overwrite: true,
     name: `/${stackName}/${aws.config.region}/comfy-ui-headless/image-uri`,
-    value: comfyRepo.repository.arn,
+    value: comfyHeadlessImage.imageUri,
   },
   { provider },
 );
