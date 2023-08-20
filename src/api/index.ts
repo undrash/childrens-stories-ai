@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { APIGatewayEvent, Context, Handler } from 'aws-lambda';
+import { APIGatewayEvent, Context } from 'aws-lambda';
 import { Request, Response } from 'lambda-api';
 import createAPI from 'lambda-api';
 import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
@@ -35,30 +35,29 @@ api.post('/images', async (req: Request, res: Response) => {
 
   const now = new Date().toISOString();
 
-  const image = await Images.put({
+  const imageParams = {
     id: randomUUID(),
     prompt,
     status: ImageStatus.PENDING,
     inferenceConfig: getComfyPipelineFromPrompt(prompt),
     createdAt: now,
     updatedAt: now,
-  });
+  };
+
+  await Images.put(imageParams);
 
   const sqsCommand = new SendMessageCommand({
     QueueUrl: COMFY_QUEUE_URL,
-    MessageBody: JSON.stringify(image),
+    MessageBody: JSON.stringify(imageParams),
     // We only use FIFO to ensure no duplicates
     MessageGroupId: randomUUID(),
   });
 
   await sqs.send(sqsCommand);
 
-  res.status(201).json(image);
+  res.status(201).json(imageParams);
 });
 
-export const handler: Handler = async (
-  event: APIGatewayEvent,
-  context: Context,
-) => {
+export const handler = async (event: APIGatewayEvent, context: Context) => {
   return await api.run(event, context);
 };
