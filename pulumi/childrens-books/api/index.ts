@@ -9,6 +9,7 @@ import {
   stackName,
   provider,
   queueVisibilityTimeoutInSeconds,
+  childrensBooksConfig,
 } from '../../config';
 
 export const comfyQueue = new aws.sqs.Queue(
@@ -104,6 +105,8 @@ const apiLambdaRole = new aws.iam.Role(
   { provider },
 );
 
+const apiKey = childrensBooksConfig.requireSecret('apiKey');
+
 const apiLambda = new aws.lambda.Function(
   'childrens-books-api-lambda',
   {
@@ -118,6 +121,7 @@ const apiLambda = new aws.lambda.Function(
       variables: {
         REGION: aws.config.region as string,
         IMAGE_TABLE_NAME: imageTable.name,
+        API_KEY: apiKey,
       },
     },
   },

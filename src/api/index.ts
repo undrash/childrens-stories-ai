@@ -4,16 +4,23 @@ import { Request, Response } from 'lambda-api';
 import createAPI from 'lambda-api';
 
 import { DynamoTable, getEnvValue, ImageStatus } from '../_lib';
+import { authenticate } from './middleware';
+
+const REGION = getEnvValue('REGION');
+const IMAGE_TABLE_NAME = getEnvValue('IMAGE_TABLE_NAME');
+
 
 const Images = new DynamoTable({
   name: 'ImageTable',
-  region: getEnvValue('REGION'),
+  region: REGION,
   hashKey: 'id',
   rangeKey: null,
-  tableName: getEnvValue('IMAGE_TABLE_NAME'),
+  tableName: IMAGE_TABLE_NAME,
 });
 
 const api = createAPI();
+
+api.use(authenticate);
 
 api.get('/status', async (_req: Request, res: Response) => {
   res.status(200).json({ status: 'ok' });

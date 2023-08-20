@@ -1,6 +1,8 @@
 encryptionsalt: v1:ZdOqJA5cavE=:v1:lNSccGHSS/KKZGyO:xytEQ5FGL2cKY1NGMCk2b6ygR/n4TQ==
 config:
   aws:region: eu-north-1
+  childrens-books:apiKey:
+    secure: v1:S7x41spX2/U2vdrG:Ax+AtXJue6G/MQ3y9FQLVwYHKAPcbENKLcpP0Ma2/7F/mFCCjD+UiKjEjlZYGp2HtS3dh+vJZEUNoo+BDylBvIHwZxPEuoIEYrDM1/LZaugi9YeF
   childrens-books:environment: dev
   childrens-books:keyPairName: 'ChildrensBooks'
   childrens-books:vpcId:
