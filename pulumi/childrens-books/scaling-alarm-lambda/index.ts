@@ -282,14 +282,17 @@ const cwMetricLambda = new aws.lambda.Function(
     timeout: lambdaTimeoutInSeconds,
     environment: {
       variables: {
-        COMFY_QUEUE_NAME: pulumi.interpolate`${comfyQueue.name}`,
-        SQS_QUEUE_URL: pulumi.interpolate`${comfyQueue.url}`,
-        ACCOUNT_ID: pulumi.interpolate`${awsCurrentAccountId}`,
-        ECS_SERVICE_NAME: pulumi.interpolate`${comfyDiffusionEcsService.name}`,
-        ECS_CLUSTER: pulumi.interpolate`${comfyEcsCluster.name}`,
-        // TODO: Lift these out into a config file
-        LATENCY_SECONDS: '60',
-        TIME_PER_MESSAGE: '15',
+        COMFY_QUEUE_NAME: comfyQueue.name,
+        COMFY_QUEUE_URL: comfyQueue.url,
+        ACCOUNT_ID: awsCurrentAccountId,
+        ECS_SERVICE_NAME: comfyDiffusionEcsService.name,
+        ECS_CLUSTER: comfyEcsCluster.name,
+        LATENCY_SECONDS: childrensBooksConfig
+          .requireNumber('metricLatencySeconds')
+          .toString(),
+        TIME_PER_MESSAGE: childrensBooksConfig
+          .requireNumber('metricTimePerMessage')
+          .toString(),
       },
     },
   },
