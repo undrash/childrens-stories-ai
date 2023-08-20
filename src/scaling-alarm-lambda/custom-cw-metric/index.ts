@@ -6,7 +6,7 @@ import {
 import { ECSClient, DescribeServicesCommand } from '@aws-sdk/client-ecs';
 
 // Leave outside of Lambda to benefit from globals
-const SQS_QUEUE_NAME = process.env.SQS_QUEUE_NAME as string;
+const COMFY_QUEUE_NAME = process.env.COMFY_QUEUE_NAME as string;
 const SQS_QUEUE_URL = process.env.SQS_QUEUE_URL as string;
 const ECS_SERVICE_NAME = process.env.ECS_SERVICE_NAME as string;
 const ECS_CLUSTER = process.env.ECS_CLUSTER as string;
@@ -75,21 +75,21 @@ export const handler = async () => {
 
   const approx = publishCWMetric(
     'SQS',
-    SQS_QUEUE_NAME,
+    COMFY_QUEUE_NAME,
     'ApproximateNumberOfMessages',
     sqsMessageCount,
   );
 
   const scale = publishCWMetric(
     'SQS',
-    SQS_QUEUE_NAME,
+    COMFY_QUEUE_NAME,
     'ScaleAdjustmentTaskCount',
     scaleAdjustment,
   );
 
   const desired = publishCWMetric(
     'SQS',
-    SQS_QUEUE_NAME,
+    COMFY_QUEUE_NAME,
     'DesiredTasks',
     desiredTaskCount,
   );

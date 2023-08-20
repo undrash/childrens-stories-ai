@@ -282,7 +282,7 @@ const cwMetricLambda = new aws.lambda.Function(
     timeout: lambdaTimeoutInSeconds,
     environment: {
       variables: {
-        SQS_QUEUE_NAME: pulumi.interpolate`${comfyQueue.name}`,
+        COMFY_QUEUE_NAME: pulumi.interpolate`${comfyQueue.name}`,
         SQS_QUEUE_URL: pulumi.interpolate`${comfyQueue.url}`,
         ACCOUNT_ID: pulumi.interpolate`${awsCurrentAccountId}`,
         ECS_SERVICE_NAME: pulumi.interpolate`${comfyDiffusionEcsService.name}`,
