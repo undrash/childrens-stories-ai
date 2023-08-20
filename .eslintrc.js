@@ -9,7 +9,7 @@ module.exports = {
     jest: true,
   },
   extends: [
-    'eslint:recommended', 
+    'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
   ],
   parser: '@typescript-eslint/parser',
@@ -33,6 +33,7 @@ module.exports = {
         argsIgnorePattern: '^_',
       },
     ],
+    '@typescript-eslint/ban-ts-comment': 'off',
   },
   'settings': {
     'import/parsers': {
