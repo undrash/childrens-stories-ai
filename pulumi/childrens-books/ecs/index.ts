@@ -463,6 +463,12 @@ const ecsTaskDefinition = new aws.ecs.TaskDefinition(
             essential: true,
             entryPoint: [],
             command: [],
+            healthCheck: {
+              command: [
+                'CMD-SHELL',
+                'curl --head --fail --silent --max-time 5 http://127.0.0.1:8188 > /dev/null || exit 1',
+              ],
+            },
             environment: [
               {
                 name: 'REGION',
