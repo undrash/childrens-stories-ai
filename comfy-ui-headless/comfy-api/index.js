@@ -219,7 +219,7 @@ const validatePayload = (payload) => {
     throw new Error('Validation Error: Payload not found.');
   }
 
-  const mandatoryFields = ['id', 'inferenceConfig', 'bookId', 'pageId'];
+  const mandatoryFields = ['id', 'inferenceConfig'];
 
   mandatoryFields.forEach((field) => {
     if (!payload[field]) {
