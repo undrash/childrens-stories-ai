@@ -5,7 +5,7 @@ export const getComfyPipelineFromPrompt = (prompt: string) =>
     prompt: {
       3: {
         inputs: {
-          seed: 364127582057924,
+          seed: Math.floor(Math.random() * (Number.MAX_SAFE_INTEGER + 1)),
           steps: 20,
           cfg: 8,
           sampler_name: 'euler',
