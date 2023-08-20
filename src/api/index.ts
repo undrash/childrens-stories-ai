@@ -2,13 +2,17 @@ import { randomUUID } from 'node:crypto';
 import { APIGatewayEvent, Context, Handler } from 'aws-lambda';
 import { Request, Response } from 'lambda-api';
 import createAPI from 'lambda-api';
+import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
 
 import { DynamoTable, getEnvValue, ImageStatus } from '../_lib';
 import { authenticate } from './middleware';
+import { getComfyPipelineFromPrompt } from './comfy';
 
 const REGION = getEnvValue('REGION');
 const IMAGE_TABLE_NAME = getEnvValue('IMAGE_TABLE_NAME');
+const COMFY_QUEUE_URL = getEnvValue('COMFY_QUEUE_URL');
 
+const sqs = new SQSClient({ region: REGION });
 
 const Images = new DynamoTable({
   name: 'ImageTable',
@@ -29,11 +33,25 @@ api.get('/status', async (_req: Request, res: Response) => {
 api.post('/images', async (req: Request, res: Response) => {
   const { prompt } = req.body;
 
+  const now = new Date().toISOString();
+
   const image = await Images.put({
     id: randomUUID(),
     prompt,
     status: ImageStatus.PENDING,
+    inferenceConfig: getComfyPipelineFromPrompt(prompt),
+    createdAt: now,
+    updatedAt: now,
   });
+
+  const sqsCommand = new SendMessageCommand({
+    QueueUrl: COMFY_QUEUE_URL,
+    MessageBody: JSON.stringify(image),
+    // We only use FIFO to ensure no duplicates
+    MessageGroupId: randomUUID(),
+  });
+
+  await sqs.send(sqsCommand);
 
   res.status(201).json(image);
 });

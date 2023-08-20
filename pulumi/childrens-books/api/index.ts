@@ -73,6 +73,26 @@ const dynamoCrudPolicy = new aws.iam.Policy(
   { provider },
 );
 
+const lambdaSendSqsMessagePolicy = new aws.iam.Policy(
+  'api-lambda-send-sqs-policy',
+  {
+    name: `${stackName}-lambda-api-sqs-write-policy`,
+    policy: pulumi.all([comfyQueue.arn]).apply(([comfyQueueArn]) =>
+      JSON.stringify({
+        Version: '2012-10-17',
+        Statement: [
+          {
+            Action: ['sqs:SendMessage'],
+            Effect: 'Allow',
+            Resource: [comfyQueueArn],
+          },
+        ],
+      }),
+    ),
+  },
+  { provider },
+);
+
 const apiLambdaLoggingPolicy = new aws.iam.Policy(
   'api-lambda-logging',
   {
@@ -100,7 +120,11 @@ const apiLambdaRole = new aws.iam.Role(
     assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal({
       Service: ['lambda.amazonaws.com'],
     }),
-    managedPolicyArns: [apiLambdaLoggingPolicy.arn, dynamoCrudPolicy.arn],
+    managedPolicyArns: [
+      apiLambdaLoggingPolicy.arn,
+      dynamoCrudPolicy.arn,
+      lambdaSendSqsMessagePolicy.arn,
+    ],
   },
   { provider },
 );
@@ -122,6 +146,7 @@ const apiLambda = new aws.lambda.Function(
         REGION: aws.config.region as string,
         IMAGE_TABLE_NAME: imageTable.name,
         API_KEY: apiKey,
+        COMFY_QUEUE_URL: comfyQueue.url,
       },
     },
   },
