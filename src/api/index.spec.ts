@@ -27,7 +27,7 @@ afterEach(() => {
 
 const mockCtx = {};
 
-describe('handler', () => {
+describe('API handler', () => {
   it('should create the image', async () => {
     const Images = new (DynamoTable as jest.Mock)();
 
@@ -43,8 +43,6 @@ describe('handler', () => {
 
     // @ts-ignore
     const response = await handler(createImageFixture, mockCtx);
-
-    console.log(response);
 
     const mockImage = {
       id: 'mock-uuid',

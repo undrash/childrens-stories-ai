@@ -4,7 +4,7 @@ import { Request, Response } from 'lambda-api';
 import createAPI from 'lambda-api';
 import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
 
-import { DynamoTable, getEnvValue, ImageStatus } from '../_lib';
+import { DynamoTable, getEnvValue, ImageStatus, JSONValue } from '../_lib';
 import { authenticate } from './middleware';
 import { getComfyPipelineFromPrompt } from './comfy';
 
@@ -39,7 +39,7 @@ api.post('/images', async (req: Request, res: Response) => {
     id: randomUUID(),
     prompt,
     status: ImageStatus.PENDING,
-    inferenceConfig: getComfyPipelineFromPrompt(prompt),
+    inferenceConfig: getComfyPipelineFromPrompt(prompt) as unknown as JSONValue,
     createdAt: now,
     updatedAt: now,
   };

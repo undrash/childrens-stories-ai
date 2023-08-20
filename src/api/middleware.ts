@@ -13,5 +13,6 @@ export const authenticate = (
   if (token !== API_KEY) {
     return res.status(401).send({ message: 'Unauthorized' });
   }
+
   next();
 };
