@@ -12,7 +12,7 @@
       "program": "${workspaceFolder}/.debug/run-lambda.ts",
       "env": {
         "REGION": "eu-north-1",
-        "IMAGE_TABLE_NAME": "generative-ai-service-images"
+        "IMAGE_TABLE_NAME": "dev-childrens-books-images"
       },
       "runtimeExecutable": "node",
       "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
@@ -29,7 +29,7 @@
       "program": "${workspaceFolder}/.debug/run-lambda.ts",
       "env": {
         "REGION": "eu-north-1",
-        "IMAGE_TABLE_NAME": "generative-ai-service-images"
+        "IMAGE_TABLE_NAME": "dev-childrens-books-images"
       },
       "runtimeExecutable": "node",
       "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
