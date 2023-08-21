@@ -4,23 +4,22 @@ import {
   PutMetricDataCommand,
 } from '@aws-sdk/client-cloudwatch';
 import { ECSClient, DescribeServicesCommand } from '@aws-sdk/client-ecs';
-
-// Leave outside of Lambda to benefit from globals
-const COMFY_QUEUE_NAME = process.env.COMFY_QUEUE_NAME as string;
-const COMFY_QUEUE_URL = process.env.COMFY_QUEUE_URL as string;
-const ECS_SERVICE_NAME = process.env.ECS_SERVICE_NAME as string;
-const ECS_CLUSTER = process.env.ECS_CLUSTER as string;
-const LATENCY_SECONDS = process.env.LATENCY_SECONDS as string;
-const TIME_PER_MESSAGE = process.env.TIME_PER_MESSAGE as string;
+import { getEnvValue } from '../../_lib';
 
 const sqs = new SQSClient();
 const cw = new CloudWatchClient();
 const ecs = new ECSClient();
 
 export const handler = async () => {
-  const acceptableBacklogPerCapacityUnit = Math.floor(
-    parseInt(LATENCY_SECONDS) / parseFloat(TIME_PER_MESSAGE),
-  );
+  const COMFY_QUEUE_NAME = getEnvValue('COMFY_QUEUE_NAME');
+  const COMFY_QUEUE_URL = getEnvValue('COMFY_QUEUE_URL');
+  const ECS_SERVICE_NAME = getEnvValue('ECS_SERVICE_NAME');
+  const ECS_CLUSTER = getEnvValue('ECS_CLUSTER');
+  const LATENCY_SECONDS = getEnvValue('LATENCY_SECONDS');
+  const TIME_PER_MESSAGE = getEnvValue('TIME_PER_MESSAGE');
+
+  const acceptableBacklogPerCapacityUnit =
+    Math.floor(parseInt(LATENCY_SECONDS) / parseFloat(TIME_PER_MESSAGE)) || 1;
 
   const ecsResponse = await ecs.send(
     new DescribeServicesCommand({
@@ -29,23 +28,28 @@ export const handler = async () => {
     }),
   );
 
-  const serviceIndex = ecsResponse.services!.findIndex(
+  if (!ecsResponse.services) {
+    console.error(JSON.stringify(ecsResponse, null, 2));
+    throw new Error('ECS did not return any services.');
+  }
+
+  const serviceIndex = ecsResponse.services.findIndex(
     ({ serviceName }) => serviceName === ECS_SERVICE_NAME,
   );
 
-  const service = ecsResponse.services![serviceIndex];
+  const service = ecsResponse.services[serviceIndex];
 
-  // Set the desired task count by running-count and pending-count. If its pending, its trying to be desired!
   let currentTaskCount;
 
-  try {
+  if (service) {
     currentTaskCount =
       Math.trunc(service.runningCount as number) +
       Math.trunc(service.pendingCount as number);
+
     console.log(`Current ECS Task(s): ${currentTaskCount}`);
-  } catch (error) {
+  } else {
     currentTaskCount = 0;
-    console.log('[WARNING]: Service is not available, defaulting Task to 0.');
+    console.log('Service is not available, defaulting Task to 0.');
   }
 
   const sqsResponse = await sqs.send(
@@ -58,9 +62,14 @@ export const handler = async () => {
     }),
   );
 
+  if (!sqsResponse.Attributes) {
+    console.error(JSON.stringify(sqsResponse, null, 2));
+    throw new Error('SQS did not return any attributes.');
+  }
+
   const sqsMessageCount =
-    parseInt(sqsResponse.Attributes!.ApproximateNumberOfMessages) +
-    parseInt(sqsResponse.Attributes!.ApproximateNumberOfMessagesNotVisible);
+    parseInt(sqsResponse.Attributes.ApproximateNumberOfMessages) +
+    parseInt(sqsResponse.Attributes.ApproximateNumberOfMessagesNotVisible);
 
   console.log(`Queue Message(s): ${sqsMessageCount}`);
 
