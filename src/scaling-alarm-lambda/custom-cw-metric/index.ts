@@ -33,24 +33,20 @@ export const handler = async () => {
     throw new Error('ECS did not return any services.');
   }
 
-  const serviceIndex = ecsResponse.services.findIndex(
+  const service = ecsResponse.services.find(
     ({ serviceName }) => serviceName === ECS_SERVICE_NAME,
   );
 
-  const service = ecsResponse.services[serviceIndex];
-
-  let currentTaskCount;
-
-  if (service) {
-    currentTaskCount =
-      Math.trunc(service.runningCount as number) +
-      Math.trunc(service.pendingCount as number);
-
-    console.log(`Current ECS Task(s): ${currentTaskCount}`);
-  } else {
-    currentTaskCount = 0;
-    console.log('Service is not available, defaulting Task to 0.');
+  if (!service) {
+    console.error(JSON.stringify(ecsResponse, null, 2));
+    throw new Error(
+      `ECS did not return the target service: ${ECS_SERVICE_NAME}`,
+    );
   }
+
+  const currentTaskCount =
+    Math.trunc(service.runningCount as number) +
+    Math.trunc(service.pendingCount as number);
 
   const sqsResponse = await sqs.send(
     new GetQueueAttributesCommand({

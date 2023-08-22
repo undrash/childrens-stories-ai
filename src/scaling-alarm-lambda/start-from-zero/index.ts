@@ -8,14 +8,14 @@ import {
 const sqsClient = new SQSClient();
 const autoScalingClient = new AutoScalingClient();
 
-const SQS_QUEUE_URL = process.env.SQS_QUEUE_URL as string;
+const COMFY_QUEUE_NAME = process.env.COMFY_QUEUE_NAME as string;
 const AUTOSCALING_GROUP = process.env.AUTOSCALING_GROUP as string;
 
-// Spin up an EC2 from the autoscaling group if there are no messages in the queue.
+// Spin up an EC2 from the autoscaling group if there are messages in the queue.
 // NOTE: This function returns booleans to be used by step functions.
 export const handler = async () => {
   const getQueueAttributesParams = {
-    QueueUrl: SQS_QUEUE_URL,
+    QueueUrl: COMFY_QUEUE_NAME,
     AttributeNames: [
       'ApproximateNumberOfMessages',
       'ApproximateNumberOfMessagesNotVisible',

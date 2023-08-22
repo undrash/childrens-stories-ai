@@ -101,6 +101,7 @@ describe('Scaling Alarm Lambda', () => {
       ],
     });
   });
+
   it('should scale down -37 to 13', async () => {
     const mockEcsResponse = {
       services: [
@@ -177,6 +178,7 @@ describe('Scaling Alarm Lambda', () => {
       ],
     });
   });
+
   it('should scale down -38 to 12', async () => {
     const mockEcsResponse = {
       services: [
@@ -253,6 +255,7 @@ describe('Scaling Alarm Lambda', () => {
       ],
     });
   });
+
   it('should scale up +51 to 68', async () => {
     const mockEcsResponse = {
       services: [
@@ -329,6 +332,7 @@ describe('Scaling Alarm Lambda', () => {
       ],
     });
   });
+
   it('should scale up +4 to 5', async () => {
     process.env.LATENCY_SECONDS = '120';
     process.env.TIME_PER_MESSAGE = '5';
@@ -408,13 +412,14 @@ describe('Scaling Alarm Lambda', () => {
       ],
     });
   });
+
   it('should throw on missing ECS services', async () => {
     ecsMock.on(DescribeServicesCommand).resolves({});
 
     await expect(handler()).rejects.toThrow(/ECS did not return any services./);
   });
 
-  it.only('should throw on missing SQS attributes', async () => {
+  it('should throw on missing SQS attributes', async () => {
     const mockEcsResponse = {
       services: [
         {

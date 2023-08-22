@@ -380,7 +380,7 @@ const startFromZeroLambda = new aws.lambda.Function(
     environment: {
       variables: {
         AUTOSCALING_GROUP: pulumi.interpolate`${autoScalingGroup.name}`,
-        SQS_QUEUE_URL: pulumi.interpolate`${comfyQueue.url}`,
+        COMFY_QUEUE_NAME: pulumi.interpolate`${comfyQueue.url}`,
       },
     },
   },
