@@ -475,7 +475,7 @@ const ecsTaskDefinition = new aws.ecs.TaskDefinition(
                 value: aws.config.region,
               },
               {
-                name: 'SQS_QUEUE_URL',
+                name: 'COMFY_QUEUE_URL',
                 value: queueUrl,
               },
               {

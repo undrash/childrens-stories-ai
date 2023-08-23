@@ -11,8 +11,8 @@ const { ComfyApi, COMFY_ADDRESS } = require('./ComfyApi');
 const REGION = process.env.REGION || 'eu-north-1';
 const AWS_ENDPOINT_URL =
   process.env.AWS_ENDPOINT_URL || 'http://localhost:4566'; // For local development
-const SQS_QUEUE_URL =
-  process.env.SQS_QUEUE_URL || 'http://localhost:4566/000000000000/inference';
+const COMFY_QUEUE_URL =
+  process.env.COMFY_QUEUE_URL || 'http://localhost:4566/000000000000/inference';
 const S3_BUCKET_NAME = process.env.S3_BUCKET_NAME || 'inference';
 const SNS_TOPIC_ARN =
   process.env.SNS_TOPIC_ARN ||
@@ -278,14 +278,14 @@ async function main() {
   while (true) {
     console.log('Waiting for next message from Queue...');
     let [payload, receiptHandle] = await getSqsMessage(
-      SQS_QUEUE_URL,
+      COMFY_QUEUE_URL,
       WAIT_TIME_SECONDS,
     );
 
     if (!payload) {
       while (!payload) {
         [payload, receiptHandle] = await getSqsMessage(
-          SQS_QUEUE_URL,
+          COMFY_QUEUE_URL,
           WAIT_TIME_SECONDS,
         );
         if (payload) {
@@ -304,7 +304,7 @@ async function main() {
     } catch (err) {
       console.log('Invalid inference message payload. Skipping...');
       console.log('REASON: ', err.toString());
-      await deleteSQSMessage(SQS_QUEUE_URL, receiptHandle);
+      await deleteSQSMessage(COMFY_QUEUE_URL, receiptHandle);
       continue;
     }
 
@@ -329,7 +329,7 @@ async function main() {
     delete PROCESSING_IMAGES[CURRENT_INFERENCE_ID];
     CURRENT_INFERENCE_ID = null;
 
-    await deleteSQSMessage(SQS_QUEUE_URL, receiptHandle);
+    await deleteSQSMessage(COMFY_QUEUE_URL, receiptHandle);
   }
 }
 

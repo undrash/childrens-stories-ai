@@ -4,12 +4,13 @@ import {
   DescribeAutoScalingGroupsCommand,
   SetDesiredCapacityCommand,
 } from '@aws-sdk/client-auto-scaling';
+import { getEnvValue } from '../../_lib';
 
 const sqsClient = new SQSClient();
 const autoScalingClient = new AutoScalingClient();
 
-const COMFY_QUEUE_NAME = process.env.COMFY_QUEUE_NAME as string;
-const AUTOSCALING_GROUP = process.env.AUTOSCALING_GROUP as string;
+const COMFY_QUEUE_NAME = getEnvValue('COMFY_QUEUE_NAME');
+const AUTOSCALING_GROUP = getEnvValue('AUTOSCALING_GROUP');
 
 // Spin up an EC2 from the autoscaling group if there are messages in the queue.
 // NOTE: This function returns booleans to be used by step functions.
