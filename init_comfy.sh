@@ -10,7 +10,7 @@ subdir_path="$script_path/comfy-ui-headless/src"
 comfy_url="https://github.com/comfyanonymous/ComfyUI"
 
 # Define the specific commit you want to checkout
-commit_hash="974958ff81d9af92b01490bcc99dfc93f8bb5d30"
+commit_hash="f081017c1a20a5d9cfae9005fd0898502e3356be"
 
 # Delete the existing subdirectory
 rm -rf "$subdir_path"
