@@ -12,7 +12,8 @@ const REGION = process.env.REGION || 'eu-north-1';
 const AWS_ENDPOINT_URL =
   process.env.AWS_ENDPOINT_URL || 'http://localhost:4566'; // For local development
 const COMFY_QUEUE_URL =
-  process.env.COMFY_QUEUE_URL || 'http://localhost:4566/000000000000/inference';
+  process.env.COMFY_QUEUE_URL ||
+  'http://localhost:4566/000000000000/inference.fifo';
 const S3_BUCKET_NAME = process.env.S3_BUCKET_NAME || 'inference';
 const SNS_TOPIC_ARN =
   process.env.SNS_TOPIC_ARN ||

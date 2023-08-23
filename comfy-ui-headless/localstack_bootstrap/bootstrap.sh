@@ -12,8 +12,8 @@ AWS_REGION=eu-north-1
 DEFAULT_RESOURCE_NAME="inference"
 
 create_queue() {
-    local QUEUE_NAME_TO_CREATE=$1
-    awslocal --endpoint-url=http://${LOCALSTACK_HOST}:4566 sqs create-queue --queue-name ${QUEUE_NAME_TO_CREATE} --region ${AWS_REGION} --attributes VisibilityTimeout=30
+    local QUEUE_NAME_TO_CREATE=$1.fifo
+    awslocal --endpoint-url=http://${LOCALSTACK_HOST}:4566 sqs create-queue --queue-name ${QUEUE_NAME_TO_CREATE} --region ${AWS_REGION} --attributes FifoQueue=true,ContentBasedDeduplication=true,VisibilityTimeout=30
 }
 
 create_bucket() {
