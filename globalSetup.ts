@@ -12,6 +12,7 @@ const setup = (): void => {
     ECS_CLUSTER: 'test',
     LATENCY_SECONDS: '60',
     TIME_PER_MESSAGE: '15',
+    AUTOSCALING_GROUP: 'test',
   };
 
   process.env = { ...process.env, ...Env };
