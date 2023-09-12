@@ -183,8 +183,6 @@ const describeEcsServicesPolicy = new aws.iam.Policy(
         {
           Effect: 'Allow',
           Action: 'ecs:DescribeServices',
-          // TODO: Look into why the service in Pulumi
-          // is missing the `arn` property
           Resource: '*',
         },
       ],
@@ -271,7 +269,7 @@ const cwMetricLambda = new aws.lambda.Function(
   'cw-metric-lambda',
   {
     name: `${stackName}-cw-metric-lambda`,
-    description: 'Lekent CloudWatch Metric Lambda',
+    description: "Children's Books CloudWatch Metric Lambda",
     code: new pulumi.asset.FileArchive(
       '../../dist/scaling-alarm-lambda/custom-cw-metric',
     ),
@@ -294,15 +292,6 @@ const cwMetricLambda = new aws.lambda.Function(
           .toString(),
       },
     },
-  },
-  { provider },
-);
-
-const cwMetricLambdaLogGroup = new aws.cloudwatch.LogGroup(
-  'cw-metric-lambda-log-group',
-  {
-    name: pulumi.interpolate`/aws/lambda/${cwMetricLambda.name}`,
-    retentionInDays: logRetentionInDays,
   },
   { provider },
 );
@@ -368,7 +357,7 @@ const startFromZeroLambda = new aws.lambda.Function(
   'start-from-zero-lambda',
   {
     name: `${stackName}-start-from-zero-lambda`,
-    description: 'Lekent Start from Zero Lambda',
+    description: "Children's Books Start from Zero Lambda",
     code: new pulumi.asset.FileArchive(
       '../../dist/scaling-alarm-lambda/start-from-zero',
     ),
@@ -382,15 +371,6 @@ const startFromZeroLambda = new aws.lambda.Function(
         COMFY_QUEUE_NAME: pulumi.interpolate`${comfyQueue.url}`,
       },
     },
-  },
-  { provider },
-);
-
-const startFromZeroLambdaLogGroup = new aws.cloudwatch.LogGroup(
-  'start-from-zero-lambda-log-group',
-  {
-    name: pulumi.interpolate`/aws/lambda/${startFromZeroLambda.name}`,
-    retentionInDays: logRetentionInDays,
   },
   { provider },
 );
@@ -452,8 +432,6 @@ const updateServicePolicy = new aws.iam.Policy(
         {
           Effect: 'Allow',
           Action: 'ecs:UpdateService',
-          // TODO: Look into why the service in Pulumi
-          // is missing the `arn` property
           Resource: '*',
         },
       ],
@@ -513,14 +491,27 @@ const startFromZeroSfnRole = new aws.iam.Role(
   { provider },
 );
 
-// TODO: Make it type EXPRESS and only log ERRORS to a dedicated log group
+const startFromZeroLogGroup = new aws.cloudwatch.LogGroup(
+  'start-from-zero-log-group',
+  {
+    name: '/aws/states/start-from-zero-sfn',
+    retentionInDays: logRetentionInDays,
+  },
+  { provider },
+);
+
 /* eslint-disable quote-props */
 const startFromZeroStateMachine = new aws.sfn.StateMachine(
   'start-from-zero-sfn',
   {
     name: `${stackName}-start-from-zero`,
     roleArn: startFromZeroSfnRole.arn,
-    // type: 'EXPRESS',
+    type: 'EXPRESS',
+    loggingConfiguration: {
+      level: 'ERROR',
+      includeExecutionData: true,
+      logDestination: pulumi.interpolate`${startFromZeroLogGroup.arn}:*`,
+    },
     definition: pulumi
       .all([startFromZeroLambda.arn])
       .apply(([startFromZeroLambdaArn]) =>
@@ -717,14 +708,27 @@ const cwMetricSfnRole = new aws.iam.Role(
   { provider },
 );
 
-// TODO: Make it type EXPRESS and only log ERRORS to a dedicated log group
+const cwMetricsLogGroup = new aws.cloudwatch.LogGroup(
+  'cw-metrics-log-group',
+  {
+    name: '/aws/states/cw-metrics',
+    retentionInDays: logRetentionInDays,
+  },
+  { provider },
+);
+
 /* eslint-disable quote-props */
 const cwMetricStateMachine = new aws.sfn.StateMachine(
   'cw-metric-state-machine',
   {
     name: stackName,
     roleArn: cwMetricSfnRole.arn,
-    // type: 'EXPRESS',
+    type: 'EXPRESS',
+    loggingConfiguration: {
+      level: 'ERROR',
+      includeExecutionData: true,
+      logDestination: pulumi.interpolate`${cwMetricsLogGroup.arn}:*`,
+    },
     definition: pulumi
       .all([
         cwMetricLambda.arn,
