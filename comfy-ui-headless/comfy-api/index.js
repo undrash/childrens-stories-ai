@@ -19,6 +19,11 @@ const SNS_TOPIC_ARN =
   process.env.SNS_TOPIC_ARN ||
   'arn:aws:sns:eu-north-1:000000000000:inference.fifo';
 
+const MAX_INFERENCE_TIME =
+  parseInt(process.env.MAX_INFERENCE_TIME_SECONDS) * 1000 || 60 * 1000; // 1 minute default
+const INFERENCE_POLLING_INTERVAL =
+  parseInt(process.env.INFERENCE_POLLING_INTERVAL_SECONDS) * 1000 || 2000; // 2 seconds default
+
 const isDevEnv = process.env.NODE_ENV === 'dev';
 
 const sqs = new SQSClient({
@@ -239,15 +244,15 @@ const validatePayload = (payload) => {
 
 const inferenceReady = async () => {
   let elapsedTime = 0;
-  // TODO: Lift these to environment variables
-  const maxTime = 60 * 1000; // 1 minute
-  const waitTime = 2000; // 2 seconds
 
   while (true) {
     // Wait 2 seconds
     console.log('Waiting for prompt to be ready...');
-    await new Promise((resolve) => setTimeout(resolve, waitTime));
-    elapsedTime += waitTime;
+    await new Promise((resolve) =>
+      setTimeout(resolve, INFERENCE_POLLING_INTERVAL),
+    );
+
+    elapsedTime += INFERENCE_POLLING_INTERVAL;
 
     if (INFERENCE_STATUS[CURRENT_INFERENCE_ID]) {
       console.log('Prompt is ready!');
@@ -255,7 +260,7 @@ const inferenceReady = async () => {
     }
 
     // Throw an error if the maximum time is reached
-    if (elapsedTime >= maxTime) {
+    if (elapsedTime >= MAX_INFERENCE_TIME) {
       throw new Error('Timed out waiting for prompt to be ready');
     }
   }

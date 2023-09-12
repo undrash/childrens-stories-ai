@@ -475,6 +475,10 @@ const ecsTaskDefinition = new aws.ecs.TaskDefinition(
                 value: aws.config.region,
               },
               {
+                name: 'NODE_ENV',
+                value: 'prod',
+              },
+              {
                 name: 'COMFY_QUEUE_URL',
                 value: queueUrl,
               },
@@ -487,8 +491,16 @@ const ecsTaskDefinition = new aws.ecs.TaskDefinition(
                 value: imageTopicArn,
               },
               {
-                name: 'NODE_ENV',
-                value: 'prod',
+                name: 'MAX_INFERENCE_TIME_SECONDS',
+                value: childrensBooksConfig
+                  .requireNumber('maxInferenceTimeSeconds')
+                  .toString(),
+              },
+              {
+                name: 'INFERENCE_POLLING_INTERVAL_SECONDS',
+                value: childrensBooksConfig
+                  .requireNumber('inferencePollingIntervalSeconds')
+                  .toString(),
               },
             ],
             environmentFiles: [],

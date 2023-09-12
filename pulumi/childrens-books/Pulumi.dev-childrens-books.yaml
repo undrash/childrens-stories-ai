@@ -9,3 +9,5 @@ config:
     secure: v1:8UvqE7tLZDLVrj8Q:OTnSQ6VP59OhcFRK0JuH4TAPg9KmM+CrjYM3M+e9n1kjxMYkNg==
   childrens-books:metricLatencySeconds: 60
   childrens-books:metricTimePerMessage: 15
+  childrens-books:maxInferenceTimeSeconds: 60
+  childrens-books:inferencePollingIntervalSeconds: 2
