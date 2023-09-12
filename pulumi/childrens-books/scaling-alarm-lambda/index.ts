@@ -18,8 +18,7 @@ const ecsTarget = new aws.appautoscaling.Target(
   {
     maxCapacity: 10,
     minCapacity: 0,
-    // TODO: Change this to cluster.name + service.name
-    resourceId: `service/${stackName}/${stackName}`,
+    resourceId: pulumi.interpolate`service/${comfyEcsCluster.name}/${comfyEcsService.name}`,
     scalableDimension: 'ecs:service:DesiredCount',
     serviceNamespace: 'ecs',
   },
