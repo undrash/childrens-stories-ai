@@ -486,8 +486,6 @@ const ecsTaskDefinition = new aws.ecs.TaskDefinition(
                 name: 'SNS_TOPIC_ARN',
                 value: imageTopicArn,
               },
-              // TODO: Could change this to config.require('environment')
-              // And use `local` instead of `dev` when running locally
               {
                 name: 'NODE_ENV',
                 value: 'prod',
@@ -530,7 +528,6 @@ export const comfyDiffusionEcsService = new aws.ecs.Service(
     name: stackName,
     cluster: comfyEcsCluster.id,
     taskDefinition: ecsTaskDefinition.arn,
-    // TODO: Change back to 0 for autoscaling
     desiredCount: 0,
     orderedPlacementStrategies: [
       {
