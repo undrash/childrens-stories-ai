@@ -24,7 +24,7 @@ const MAX_INFERENCE_TIME =
 const INFERENCE_POLLING_INTERVAL =
   parseInt(process.env.INFERENCE_POLLING_INTERVAL_SECONDS) * 1000 || 2000; // 2 seconds default
 
-const isDevEnv = process.env.NODE_ENV === 'dev';
+const isDevEnv = process.env.NODE_ENV === 'dev' || !process.env.NODE_ENV;
 
 const sqs = new SQSClient({
   region: REGION,
