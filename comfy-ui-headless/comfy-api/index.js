@@ -266,7 +266,6 @@ const inferenceReady = async () => {
   }
 };
 
-// TODO: Look into how we can leverage the Comfy queue to process multiple images at once
 let CURRENT_INFERENCE_ID = null;
 const INFERENCE_STATUS = {};
 const PROCESSING_IMAGES = {};
