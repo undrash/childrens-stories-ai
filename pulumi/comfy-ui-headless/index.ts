@@ -1,7 +1,7 @@
 import * as awsx from '@pulumi/awsx';
 import * as aws from '@pulumi/aws';
 
-import { stackName, provider } from '../config';
+import { stackName, provider, awsRegion } from '../config';
 
 const comfyRepo = new awsx.ecr.Repository(
   stackName,
@@ -25,7 +25,7 @@ const comfyRepositoryArn = new aws.ssm.Parameter(
   {
     type: 'String',
     overwrite: true,
-    name: `/${stackName}/${aws.config.region}/comfy-ui-headless/repository-arn`,
+    name: `/${stackName}/${awsRegion}/comfy-ui-headless/repository-arn`,
     value: comfyRepo.repository.arn,
   },
   { provider },
@@ -36,7 +36,7 @@ const comfyImageUri = new aws.ssm.Parameter(
   {
     type: 'String',
     overwrite: true,
-    name: `/${stackName}/${aws.config.region}/comfy-ui-headless/image-uri`,
+    name: `/${stackName}/${awsRegion}/comfy-ui-headless/image-uri`,
     value: comfyHeadlessImage.imageUri,
   },
   { provider },

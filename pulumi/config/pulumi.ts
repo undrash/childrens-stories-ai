@@ -8,7 +8,7 @@ export const comfyConfig = new pulumi.Config('comfy-ui-headless');
 export const stackName = pulumi.getStack();
 
 export const provider = new aws.Provider('childrens-books', {
-  region: aws.config.region,
+  region: aws.config.requireRegion(),
   defaultTags: {
     tags: {
       // eslint-disable-next-line quote-props
@@ -17,3 +17,5 @@ export const provider = new aws.Provider('childrens-books', {
     },
   },
 });
+
+export const awsRegion = aws.config.requireRegion() as string;

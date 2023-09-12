@@ -7,6 +7,7 @@ import {
   awsCurrentAccountId,
   provider,
   logRetentionInDays,
+  awsRegion,
 } from '../../config';
 import { comfyQueue } from '../api';
 
@@ -168,7 +169,7 @@ const containerServiceEc2Policy = new aws.iam.Policy(
     path: '/',
     description: 'IAM policy EC2 Container Service Role',
     policy: pulumi
-      .all([aws.config.region, awsCurrentAccountId])
+      .all([awsRegion, awsCurrentAccountId])
       .apply(([region, accountId]) =>
         JSON.stringify({
           Version: '2012-10-17',
@@ -346,9 +347,9 @@ export const autoScalingGroup = new aws.autoscaling.Group(
 
 const comfyRepositoryArnParam = pulumi.output(
   aws.ssm.getParameter({
-    name: `/${childrensBooksConfig.require('environment')}-comfy-ui-headless/${
-      aws.config.region
-    }/comfy-ui-headless/repository-arn`,
+    name: `/${childrensBooksConfig.require(
+      'environment',
+    )}-comfy-ui-headless/${awsRegion}/comfy-ui-headless/repository-arn`,
   }),
 );
 
@@ -426,9 +427,9 @@ const ecsLogGroup = new aws.cloudwatch.LogGroup(
 
 const comfyImageUriParam = pulumi.output(
   aws.ssm.getParameter({
-    name: `/${childrensBooksConfig.require('environment')}-comfy-ui-headless/${
-      aws.config.region
-    }/comfy-ui-headless/image-uri`,
+    name: `/${childrensBooksConfig.require(
+      'environment',
+    )}-comfy-ui-headless/${awsRegion}/comfy-ui-headless/image-uri`,
   }),
 );
 
@@ -472,7 +473,7 @@ const ecsTaskDefinition = new aws.ecs.TaskDefinition(
             environment: [
               {
                 name: 'REGION',
-                value: aws.config.region,
+                value: awsRegion,
               },
               {
                 name: 'NODE_ENV',
@@ -523,7 +524,7 @@ const ecsTaskDefinition = new aws.ecs.TaskDefinition(
               logDriver: 'awslogs',
               options: {
                 'awslogs-group': ecsLogGroupName,
-                'awslogs-region': aws.config.region,
+                'awslogs-region': awsRegion,
                 'awslogs-stream-prefix': stackName,
               },
             },
@@ -534,7 +535,7 @@ const ecsTaskDefinition = new aws.ecs.TaskDefinition(
   { provider },
 );
 
-export const comfyDiffusionEcsService = new aws.ecs.Service(
+export const comfyEcsService = new aws.ecs.Service(
   'ecs-service',
   {
     name: stackName,

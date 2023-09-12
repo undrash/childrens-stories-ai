@@ -10,6 +10,7 @@ import {
   provider,
   queueVisibilityTimeoutInSeconds,
   childrensBooksConfig,
+  awsRegion,
 } from '../../config';
 
 export const comfyQueue = new aws.sqs.Queue(
@@ -143,7 +144,7 @@ const apiLambda = new aws.lambda.Function(
     timeout: lambdaTimeoutInSeconds,
     environment: {
       variables: {
-        REGION: aws.config.region as string,
+        REGION: awsRegion,
         IMAGE_TABLE_NAME: imageTable.name,
         API_KEY: apiKey,
         COMFY_QUEUE_URL: comfyQueue.url,

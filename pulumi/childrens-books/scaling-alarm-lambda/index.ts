@@ -1,7 +1,6 @@
 import * as pulumi from '@pulumi/pulumi';
 import * as aws from '@pulumi/aws';
 import { comfyQueue } from '../api';
-import { autoScalingGroup } from '../ecs';
 import {
   childrensBooksConfig,
   provider,
@@ -9,8 +8,9 @@ import {
   awsCurrentAccountId,
   lambdaTimeoutInSeconds,
   logRetentionInDays,
+  awsRegion,
 } from '../../config';
-import { comfyDiffusionEcsService, comfyEcsCluster } from '../ecs';
+import { autoScalingGroup, comfyEcsService, comfyEcsCluster } from '../ecs';
 
 // ECS Service Autoscaling
 const ecsTarget = new aws.appautoscaling.Target(
@@ -163,7 +163,7 @@ const lambdaLoggingPolicy = new aws.iam.Policy(
           {
             Action: ['logs:CreateLogStream', 'logs:PutLogEvents'],
             Effect: 'Allow',
-            Resource: `arn:aws:logs:${aws.config.region}:${accountId}:log-group:*`,
+            Resource: `arn:aws:logs:${awsRegion}:${accountId}:log-group:*`,
           },
         ],
       }),
@@ -284,7 +284,7 @@ const cwMetricLambda = new aws.lambda.Function(
         COMFY_QUEUE_NAME: comfyQueue.name,
         COMFY_QUEUE_URL: comfyQueue.url,
         ACCOUNT_ID: awsCurrentAccountId,
-        ECS_SERVICE_NAME: comfyDiffusionEcsService.name,
+        ECS_SERVICE_NAME: comfyEcsService.name,
         ECS_CLUSTER: comfyEcsCluster.name,
         LATENCY_SECONDS: childrensBooksConfig
           .requireNumber('metricLatencySeconds')
@@ -731,7 +731,7 @@ const cwMetricStateMachine = new aws.sfn.StateMachine(
         comfyQueue.url,
         comfyQueue.name,
         awsCurrentAccountId,
-        comfyDiffusionEcsService.name,
+        comfyEcsService.name,
         comfyEcsCluster.name,
       ])
       .apply(
