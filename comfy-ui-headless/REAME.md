@@ -11,5 +11,5 @@ docker compose up
 ```
 
 ```bash
-docker run -it --rm -p 8188:8188 -v $(pwd)/src/data:/data -v $(pwd)/src/output:/output -v $(pwd)/src/models:/models --stop-signal=SIGINT --name comfy comfy-ui-headless:latest
+docker run -it --rm -p 8188:8188 --stop-signal=SIGINT --name comfy comfy-ui-headless:latest
 ```
