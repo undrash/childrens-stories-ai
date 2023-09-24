@@ -729,236 +729,141 @@ const cwMetricStateMachine = new aws.sfn.StateMachine(
       includeExecutionData: true,
       logDestination: pulumi.interpolate`${cwMetricsLogGroup.arn}:*`,
     },
-    definition: pulumi
-      .all([
-        cwMetricLambda.arn,
-        comfyQueue.url,
-        comfyQueue.name,
-        awsCurrentAccountId,
-        comfyEcsService.name,
-        comfyEcsCluster.name,
-      ])
-      .apply(
-        ([
-          cwMetricLambdaArn,
-          comfyQueueUrl,
-          comfyQueueName,
-          accountId,
-          serviceName,
-          clusterName,
-        ]) =>
-          JSON.stringify({
-            Comment: 'A description of my state machine',
-            StartAt: 'Lambda Invoke',
-            States: {
-              'Lambda Invoke': {
-                Type: 'Task',
-                Resource: 'arn:aws:states:::lambda:invoke',
-                OutputPath: '$.Payload',
-                Parameters: {
-                  FunctionName: cwMetricLambdaArn,
-                  Payload: {
-                    queueUrl: comfyQueueUrl,
-                    queueName: comfyQueueName,
-                    accountId: accountId,
-                    service_name: serviceName,
-                    cluster_name: clusterName,
-                    acceptable_latency: '90',
-                    time_process_per_message: '15',
-                  },
-                },
-                Retry: [
-                  {
-                    ErrorEquals: [
-                      'Lambda.ServiceException',
-                      'Lambda.AWSLambdaException',
-                      'Lambda.SdkClientException',
-                    ],
-                    IntervalSeconds: 2,
-                    MaxAttempts: 6,
-                    BackoffRate: 2,
-                  },
+    definition: pulumi.all([cwMetricLambda.arn]).apply(([cwMetricLambdaArn]) =>
+      JSON.stringify({
+        Comment: 'A description of my state machine',
+        StartAt: 'Lambda Invoke',
+        States: {
+          'Lambda Invoke': {
+            Type: 'Task',
+            Resource: cwMetricLambdaArn,
+            Retry: [
+              {
+                ErrorEquals: [
+                  'Lambda.ServiceException',
+                  'Lambda.AWSLambdaException',
+                  'Lambda.SdkClientException',
                 ],
-                Next: 'Wait',
+                IntervalSeconds: 2,
+                MaxAttempts: 6,
+                BackoffRate: 2,
               },
-              'Wait': {
-                Type: 'Wait',
-                Seconds: 9,
-                Next: 'Lambda Invoke (1)',
-              },
-              'Lambda Invoke (1)': {
-                Type: 'Task',
-                Resource: 'arn:aws:states:::lambda:invoke',
-                OutputPath: '$.Payload',
-                Parameters: {
-                  FunctionName: cwMetricLambdaArn,
-                  Payload: {
-                    queueUrl: comfyQueueUrl,
-                    queueName: comfyQueueName,
-                    accountId: accountId,
-                    service_name: serviceName,
-                    cluster_name: clusterName,
-                    acceptable_latency: '90',
-                    time_process_per_message: '15',
-                  },
-                },
-                Retry: [
-                  {
-                    ErrorEquals: [
-                      'Lambda.ServiceException',
-                      'Lambda.AWSLambdaException',
-                      'Lambda.SdkClientException',
-                    ],
-                    IntervalSeconds: 2,
-                    MaxAttempts: 6,
-                    BackoffRate: 2,
-                  },
+            ],
+            Next: 'Wait',
+          },
+          'Wait': {
+            Type: 'Wait',
+            Seconds: 9,
+            Next: 'Lambda Invoke (1)',
+          },
+          'Lambda Invoke (1)': {
+            Type: 'Task',
+            Resource: cwMetricLambdaArn,
+            Retry: [
+              {
+                ErrorEquals: [
+                  'Lambda.ServiceException',
+                  'Lambda.AWSLambdaException',
+                  'Lambda.SdkClientException',
                 ],
-                Next: 'Wait (2)',
+                IntervalSeconds: 2,
+                MaxAttempts: 6,
+                BackoffRate: 2,
               },
-              'Wait (2)': {
-                Type: 'Wait',
-                Seconds: 9,
-                Next: 'Lambda Invoke (2)',
-              },
-              'Lambda Invoke (2)': {
-                Type: 'Task',
-                Resource: 'arn:aws:states:::lambda:invoke',
-                OutputPath: '$.Payload',
-                Parameters: {
-                  FunctionName: cwMetricLambdaArn,
-                  Payload: {
-                    queueUrl: comfyQueueUrl,
-                    queueName: comfyQueueName,
-                    accountId: accountId,
-                    service_name: serviceName,
-                    cluster_name: clusterName,
-                    acceptable_latency: '90',
-                    time_process_per_message: '15',
-                  },
-                },
-                Retry: [
-                  {
-                    ErrorEquals: [
-                      'Lambda.ServiceException',
-                      'Lambda.AWSLambdaException',
-                      'Lambda.SdkClientException',
-                    ],
-                    IntervalSeconds: 2,
-                    MaxAttempts: 6,
-                    BackoffRate: 2,
-                  },
+            ],
+            Next: 'Wait (2)',
+          },
+          'Wait (2)': {
+            Type: 'Wait',
+            Seconds: 9,
+            Next: 'Lambda Invoke (2)',
+          },
+          'Lambda Invoke (2)': {
+            Type: 'Task',
+            Resource: cwMetricLambdaArn,
+            Retry: [
+              {
+                ErrorEquals: [
+                  'Lambda.ServiceException',
+                  'Lambda.AWSLambdaException',
+                  'Lambda.SdkClientException',
                 ],
-                Next: 'Wait (1)',
+                IntervalSeconds: 2,
+                MaxAttempts: 6,
+                BackoffRate: 2,
               },
-              'Wait (1)': {
-                Type: 'Wait',
-                Seconds: 9,
-                Next: 'Lambda Invoke (3)',
-              },
-              'Lambda Invoke (3)': {
-                Type: 'Task',
-                Resource: 'arn:aws:states:::lambda:invoke',
-                OutputPath: '$.Payload',
-                Parameters: {
-                  FunctionName: cwMetricLambdaArn,
-                  Payload: {
-                    queueUrl: comfyQueueUrl,
-                    queueName: comfyQueueName,
-                    accountId: accountId,
-                    service_name: serviceName,
-                    cluster_name: clusterName,
-                    acceptable_latency: '90',
-                    time_process_per_message: '15',
-                  },
-                },
-                Retry: [
-                  {
-                    ErrorEquals: [
-                      'Lambda.ServiceException',
-                      'Lambda.AWSLambdaException',
-                      'Lambda.SdkClientException',
-                    ],
-                    IntervalSeconds: 2,
-                    MaxAttempts: 6,
-                    BackoffRate: 2,
-                  },
+            ],
+            Next: 'Wait (1)',
+          },
+          'Wait (1)': {
+            Type: 'Wait',
+            Seconds: 9,
+            Next: 'Lambda Invoke (3)',
+          },
+          'Lambda Invoke (3)': {
+            Type: 'Task',
+            Resource: cwMetricLambdaArn,
+            Retry: [
+              {
+                ErrorEquals: [
+                  'Lambda.ServiceException',
+                  'Lambda.AWSLambdaException',
+                  'Lambda.SdkClientException',
                 ],
-                Next: 'Wait (3)',
+                IntervalSeconds: 2,
+                MaxAttempts: 6,
+                BackoffRate: 2,
               },
-              'Wait (3)': {
-                Type: 'Wait',
-                Seconds: 9,
-                Next: 'Lambda Invoke (4)',
-              },
-              'Lambda Invoke (4)': {
-                Type: 'Task',
-                Resource: 'arn:aws:states:::lambda:invoke',
-                OutputPath: '$.Payload',
-                Parameters: {
-                  FunctionName: cwMetricLambdaArn,
-                  Payload: {
-                    queueUrl: comfyQueueUrl,
-                    queueName: comfyQueueName,
-                    accountId: accountId,
-                    service_name: serviceName,
-                    cluster_name: clusterName,
-                    acceptable_latency: '90',
-                    time_process_per_message: '15',
-                  },
-                },
-                Retry: [
-                  {
-                    ErrorEquals: [
-                      'Lambda.ServiceException',
-                      'Lambda.AWSLambdaException',
-                      'Lambda.SdkClientException',
-                    ],
-                    IntervalSeconds: 2,
-                    MaxAttempts: 6,
-                    BackoffRate: 2,
-                  },
+            ],
+            Next: 'Wait (3)',
+          },
+          'Wait (3)': {
+            Type: 'Wait',
+            Seconds: 9,
+            Next: 'Lambda Invoke (4)',
+          },
+          'Lambda Invoke (4)': {
+            Type: 'Task',
+            Resource: cwMetricLambdaArn,
+            Retry: [
+              {
+                ErrorEquals: [
+                  'Lambda.ServiceException',
+                  'Lambda.AWSLambdaException',
+                  'Lambda.SdkClientException',
                 ],
-                Next: 'Wait (4)',
+                IntervalSeconds: 2,
+                MaxAttempts: 6,
+                BackoffRate: 2,
               },
-              'Wait (4)': {
-                Type: 'Wait',
-                Seconds: 9,
-                Next: 'Lambda Invoke (5)',
-              },
-              'Lambda Invoke (5)': {
-                Type: 'Task',
-                Resource: 'arn:aws:states:::lambda:invoke',
-                OutputPath: '$.Payload',
-                Parameters: {
-                  FunctionName: cwMetricLambdaArn,
-                  Payload: {
-                    queueUrl: comfyQueueUrl,
-                    queueName: comfyQueueName,
-                    accountId: accountId,
-                    service_name: serviceName,
-                    cluster_name: clusterName,
-                    acceptable_latency: '90',
-                    time_process_per_message: '15',
-                  },
-                },
-                Retry: [
-                  {
-                    ErrorEquals: [
-                      'Lambda.ServiceException',
-                      'Lambda.AWSLambdaException',
-                      'Lambda.SdkClientException',
-                    ],
-                    IntervalSeconds: 2,
-                    MaxAttempts: 6,
-                    BackoffRate: 2,
-                  },
+            ],
+            Next: 'Wait (4)',
+          },
+          'Wait (4)': {
+            Type: 'Wait',
+            Seconds: 9,
+            Next: 'Lambda Invoke (5)',
+          },
+          'Lambda Invoke (5)': {
+            Type: 'Task',
+            Resource: cwMetricLambdaArn,
+            Retry: [
+              {
+                ErrorEquals: [
+                  'Lambda.ServiceException',
+                  'Lambda.AWSLambdaException',
+                  'Lambda.SdkClientException',
                 ],
-                End: true,
+                IntervalSeconds: 2,
+                MaxAttempts: 6,
+                BackoffRate: 2,
               },
-            },
-          }),
-      ),
+            ],
+            End: true,
+          },
+        },
+      }),
+    ),
   },
   { provider },
 );
