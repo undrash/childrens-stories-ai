@@ -51,7 +51,7 @@ describe('Scaling Alarm Lambda', () => {
 
     expect(ecsMock).toHaveReceivedCommandTimes(DescribeServicesCommand, 1);
     expect(sqsMock).toHaveReceivedCommandTimes(GetQueueAttributesCommand, 1);
-    expect(cwMock).toHaveReceivedCommandTimes(PutMetricDataCommand, 3);
+    expect(cwMock).toHaveReceivedCommandTimes(PutMetricDataCommand, 2);
     expect(cwMock).toHaveReceivedCommandWith(PutMetricDataCommand, {
       Namespace: 'SQS AutoScaling',
       MetricData: [
@@ -84,22 +84,6 @@ describe('Scaling Alarm Lambda', () => {
         },
       ],
     });
-    expect(cwMock).toHaveReceivedCommandWith(PutMetricDataCommand, {
-      Namespace: 'SQS AutoScaling',
-      MetricData: [
-        {
-          MetricName: 'DesiredTasks',
-          Dimensions: [
-            {
-              Name: 'SQS',
-              Value: process.env.COMFY_QUEUE_NAME,
-            },
-          ],
-          Timestamp: mockDate,
-          Value: 25,
-        },
-      ],
-    });
   });
 
   it('should scale down -37 to 13', async () => {
@@ -128,7 +112,7 @@ describe('Scaling Alarm Lambda', () => {
 
     expect(ecsMock).toHaveReceivedCommandTimes(DescribeServicesCommand, 1);
     expect(sqsMock).toHaveReceivedCommandTimes(GetQueueAttributesCommand, 1);
-    expect(cwMock).toHaveReceivedCommandTimes(PutMetricDataCommand, 3);
+    expect(cwMock).toHaveReceivedCommandTimes(PutMetricDataCommand, 2);
     expect(cwMock).toHaveReceivedCommandWith(PutMetricDataCommand, {
       Namespace: 'SQS AutoScaling',
       MetricData: [
@@ -161,22 +145,6 @@ describe('Scaling Alarm Lambda', () => {
         },
       ],
     });
-    expect(cwMock).toHaveReceivedCommandWith(PutMetricDataCommand, {
-      Namespace: 'SQS AutoScaling',
-      MetricData: [
-        {
-          MetricName: 'DesiredTasks',
-          Dimensions: [
-            {
-              Name: 'SQS',
-              Value: process.env.COMFY_QUEUE_NAME,
-            },
-          ],
-          Timestamp: mockDate,
-          Value: 13,
-        },
-      ],
-    });
   });
 
   it('should scale down -38 to 12', async () => {
@@ -205,7 +173,7 @@ describe('Scaling Alarm Lambda', () => {
 
     expect(ecsMock).toHaveReceivedCommandTimes(DescribeServicesCommand, 1);
     expect(sqsMock).toHaveReceivedCommandTimes(GetQueueAttributesCommand, 1);
-    expect(cwMock).toHaveReceivedCommandTimes(PutMetricDataCommand, 3);
+    expect(cwMock).toHaveReceivedCommandTimes(PutMetricDataCommand, 2);
     expect(cwMock).toHaveReceivedCommandWith(PutMetricDataCommand, {
       Namespace: 'SQS AutoScaling',
       MetricData: [
@@ -238,22 +206,6 @@ describe('Scaling Alarm Lambda', () => {
         },
       ],
     });
-    expect(cwMock).toHaveReceivedCommandWith(PutMetricDataCommand, {
-      Namespace: 'SQS AutoScaling',
-      MetricData: [
-        {
-          MetricName: 'DesiredTasks',
-          Dimensions: [
-            {
-              Name: 'SQS',
-              Value: process.env.COMFY_QUEUE_NAME,
-            },
-          ],
-          Timestamp: mockDate,
-          Value: 12,
-        },
-      ],
-    });
   });
 
   it('should scale up +51 to 68', async () => {
@@ -282,7 +234,7 @@ describe('Scaling Alarm Lambda', () => {
 
     expect(ecsMock).toHaveReceivedCommandTimes(DescribeServicesCommand, 1);
     expect(sqsMock).toHaveReceivedCommandTimes(GetQueueAttributesCommand, 1);
-    expect(cwMock).toHaveReceivedCommandTimes(PutMetricDataCommand, 3);
+    expect(cwMock).toHaveReceivedCommandTimes(PutMetricDataCommand, 2);
     expect(cwMock).toHaveReceivedCommandWith(PutMetricDataCommand, {
       Namespace: 'SQS AutoScaling',
       MetricData: [
@@ -312,22 +264,6 @@ describe('Scaling Alarm Lambda', () => {
           ],
           Timestamp: mockDate,
           Value: 51,
-        },
-      ],
-    });
-    expect(cwMock).toHaveReceivedCommandWith(PutMetricDataCommand, {
-      Namespace: 'SQS AutoScaling',
-      MetricData: [
-        {
-          MetricName: 'DesiredTasks',
-          Dimensions: [
-            {
-              Name: 'SQS',
-              Value: process.env.COMFY_QUEUE_NAME,
-            },
-          ],
-          Timestamp: mockDate,
-          Value: 68,
         },
       ],
     });
@@ -362,7 +298,7 @@ describe('Scaling Alarm Lambda', () => {
 
     expect(ecsMock).toHaveReceivedCommandTimes(DescribeServicesCommand, 1);
     expect(sqsMock).toHaveReceivedCommandTimes(GetQueueAttributesCommand, 1);
-    expect(cwMock).toHaveReceivedCommandTimes(PutMetricDataCommand, 3);
+    expect(cwMock).toHaveReceivedCommandTimes(PutMetricDataCommand, 2);
     expect(cwMock).toHaveReceivedCommandWith(PutMetricDataCommand, {
       Namespace: 'SQS AutoScaling',
       MetricData: [
@@ -392,22 +328,6 @@ describe('Scaling Alarm Lambda', () => {
           ],
           Timestamp: mockDate,
           Value: 4,
-        },
-      ],
-    });
-    expect(cwMock).toHaveReceivedCommandWith(PutMetricDataCommand, {
-      Namespace: 'SQS AutoScaling',
-      MetricData: [
-        {
-          MetricName: 'DesiredTasks',
-          Dimensions: [
-            {
-              Name: 'SQS',
-              Value: process.env.COMFY_QUEUE_NAME,
-            },
-          ],
-          Timestamp: mockDate,
-          Value: 5,
         },
       ],
     });

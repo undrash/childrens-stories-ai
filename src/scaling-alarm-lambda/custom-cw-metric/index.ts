@@ -92,14 +92,7 @@ export const handler = async () => {
     scaleAdjustment,
   );
 
-  const desired = publishCWMetric(
-    'SQS',
-    COMFY_QUEUE_NAME,
-    'DesiredTasks',
-    desiredTaskCount,
-  );
-
-  Promise.allSettled([approx, scale, desired]);
+  Promise.allSettled([approx, scale]);
 };
 
 async function publishCWMetric(
