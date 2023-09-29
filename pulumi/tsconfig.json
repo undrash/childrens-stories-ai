@@ -12,5 +12,5 @@
     "noImplicitReturns": true,
     "forceConsistentCasingInFileNames": true
   },
-  "files": ["./childrens-books/index.ts", "./comfy-ui-headless/index.ts"]
+  "files": ["./childrens-stories/index.ts", "./comfy-ui-headless/index.ts"]
 }

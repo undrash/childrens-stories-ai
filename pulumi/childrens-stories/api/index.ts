@@ -133,7 +133,7 @@ const apiLambdaRole = new aws.iam.Role(
 const apiKey = childrensBooksConfig.requireSecret('apiKey');
 
 const apiLambda = new aws.lambda.Function(
-  'childrens-books-api-lambda',
+  'childrens-stories-api-lambda',
   {
     name: `${stackName}-api-lambda`,
     description: "Children's Books API Lambda",
@@ -155,7 +155,7 @@ const apiLambda = new aws.lambda.Function(
 );
 
 const apiLambdaLogGroup = new aws.cloudwatch.LogGroup(
-  'childrens-books-api-lambda-log-group',
+  'childrens-stories-api-lambda-log-group',
   {
     name: pulumi.interpolate`/aws/lambda/${apiLambda.name}`,
     retentionInDays: logRetentionInDays,

@@ -2,12 +2,12 @@ import * as pulumi from '@pulumi/pulumi';
 import * as aws from '@pulumi/aws';
 
 // Export project-specific configs from here
-export const childrensBooksConfig = new pulumi.Config('childrens-books');
+export const childrensBooksConfig = new pulumi.Config('childrens-stories');
 export const comfyConfig = new pulumi.Config('comfy-ui-headless');
 
 export const stackName = pulumi.getStack();
 
-export const provider = new aws.Provider('childrens-books', {
+export const provider = new aws.Provider('childrens-stories', {
   region: aws.config.requireRegion(),
   defaultTags: {
     tags: {
