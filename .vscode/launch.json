@@ -1,0 +1,52 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Jest All",
+      "program": "${workspaceFolder}/node_modules/.bin/jest",
+      "args": ["--runInBand"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "API: Get Status",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/.debug/run-lambda.ts",
+      "env": {
+        "REGION": "eu-north-1",
+        "IMAGE_TABLE_NAME": "dev-childrens-stories-images"
+      },
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+      "args": [
+        "${workspaceFolder}/src/api/index.ts",
+        "${workspaceFolder}/src/api/__fixtures__/get-status.json"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "API: Create Image",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/.debug/run-lambda.ts",
+      "env": {
+        "REGION": "eu-north-1",
+        "IMAGE_TABLE_NAME": "dev-childrens-stories-images"
+      },
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+      "args": [
+        "${workspaceFolder}/src/api/index.ts",
+        "${workspaceFolder}/src/api/__fixtures__/create-image.json"
+      ]
+    }
+  ]
+}

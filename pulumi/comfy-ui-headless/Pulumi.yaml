@@ -1,0 +1,3 @@
+name: comfy-ui-headless
+runtime: nodejs
+description: Headless Dockerized Comfy UI

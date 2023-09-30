@@ -1,0 +1,13 @@
+encryptionsalt: v1:ZdOqJA5cavE=:v1:lNSccGHSS/KKZGyO:xytEQ5FGL2cKY1NGMCk2b6ygR/n4TQ==
+config:
+  aws:region: eu-north-1
+  childrens-stories:apiKey:
+    secure: v1:S7x41spX2/U2vdrG:Ax+AtXJue6G/MQ3y9FQLVwYHKAPcbENKLcpP0Ma2/7F/mFCCjD+UiKjEjlZYGp2HtS3dh+vJZEUNoo+BDylBvIHwZxPEuoIEYrDM1/LZaugi9YeF
+  childrens-stories:environment: dev
+  childrens-stories:keyPairName: 'ChildrensStories'
+  childrens-stories:vpcId:
+    secure: v1:8UvqE7tLZDLVrj8Q:OTnSQ6VP59OhcFRK0JuH4TAPg9KmM+CrjYM3M+e9n1kjxMYkNg==
+  childrens-stories:metricLatencySeconds: 60
+  childrens-stories:metricTimePerMessage: 15
+  childrens-stories:maxInferenceTimeSeconds: 60
+  childrens-stories:inferencePollingIntervalSeconds: 2

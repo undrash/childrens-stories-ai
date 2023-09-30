@@ -1,0 +1,22 @@
+{
+  "display": "node18",
+  "compilerOptions": {
+    "lib": ["es2020"],
+    "module": "commonjs",
+    "target": "es2020",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@aws-sdk/client-dynamodb": ["node_modules/@aws-sdk/client-dynamodb"],
+      "@aws-sdk/client-sqs": ["node_modules/@aws-sdk/client-sqs"],
+      "@aws-sdk/lib-dynamodb": ["node_modules/@aws-sdk/lib-dynamodb"],
+      "lambda-api": ["node_modules/lambda-api"]
+    }
+  }
+}
