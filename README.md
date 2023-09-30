@@ -2,6 +2,8 @@
 
 A project to create children's stories using the latest in generative AI. The development is broken down into episodes, and each episode has its own branch, as well as a PR to the main branch.
 
+![Article cover](./cover.png)
+
 ## Getting Started
 
 To get started, you'll need to have the following on your machine:
