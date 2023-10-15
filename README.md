@@ -4,6 +4,10 @@ A project to create children's stories using the latest in generative AI. The de
 
 ![Article cover](./cover.png)
 
+**Episodes:**
+
+- [Ep 1 - Deploy a Serverless Stable Diffusion API](https://medium.com/@andrei.generative/how-to-build-an-ai-childrens-book-service-ep-1-deploy-a-serverless-stable-diffusion-api-5e7b0766d9e6)
+
 ## Getting Started
 
 To get started, you'll need to have the following on your machine:
